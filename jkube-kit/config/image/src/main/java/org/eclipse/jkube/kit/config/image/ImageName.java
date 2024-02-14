@@ -218,12 +218,21 @@ public class ImageName {
      */
     public String getFullName(String optionalRegistry) {
         String fullName = getNameWithoutTag(optionalRegistry);
-        if (tag != null) {
-            fullName = fullName +  ":" + tag;
-        }
-        if(digest != null) {
+
+        if (digest != null && tag != null) {
+            // Form B: Both tag and digest are provided, ignore tag and use digest
             fullName = fullName + "@" + digest;
+        } else if (digest != null) {
+            // Form A: Only digest is provided
+            fullName = fullName + "@" + digest;
+        } else if (tag != null) {
+            // Form C: Only tag is provided
+            fullName = fullName + ":" + tag;
+        } else {
+            // Form D: Neither tag nor digest are provided
+            // No need to modify fullName
         }
+
         return fullName;
     }
 
